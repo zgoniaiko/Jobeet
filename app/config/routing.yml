@@ -3,3 +3,6 @@ ZiaJobBundle:
     type:     annotation
     prefix:   /
 
+AcmeDemoBundle:
+    resource: "@AcmeDemoBundle/Controller/"
+    prefix:   /acme

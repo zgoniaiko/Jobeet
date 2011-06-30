@@ -1,0 +1,17 @@
+{% extends '::layout.html.twig' %}
+{% block stylesheets %}
+  {{ parent() }}
+
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  
+  <script type="text/javascript" src="{{ asset('bundles/ziajob/js/jquery-1.6.2.min.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+  <h1>Hi here!</h1>
+</div>
+{% endblock %}

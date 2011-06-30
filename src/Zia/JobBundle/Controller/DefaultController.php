@@ -8,7 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class DefaultController extends ZiaController
 {
     /**
-     * @Route("/")
+     * @Route("/", name = "homepage")
      * @Template
      */
     public function indexAction()

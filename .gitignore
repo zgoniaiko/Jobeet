@@ -1,0 +1,5 @@
+deps.lock
+app/cache/
+app/logs/
+vendor/
+www/

@@ -12,6 +12,16 @@
 
 {% block body %}
 <div class="content">
+{% if app.session.hasFlash('error') %}
+    <div class="flash-error">
+        {{ app.session.flash('error') }}
+    </div>
+{% endif %}
+{% if app.session.hasFlash('notice') %}
+    <div class="flash-notice">
+        {{ app.session.flash('notice') }}
+    </div>
+{% endif %}
   <h1>Hi here!</h1>
 </div>
 {% endblock %}

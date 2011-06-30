@@ -1,0 +1,5 @@
+ZiaJobBundle:
+    resource: "@ZiaJobBundle/Controller/"
+    type:     annotation
+    prefix:   /
+

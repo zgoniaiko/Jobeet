@@ -1,3 +1,10 @@
+{% extends 'ZiaJobBundle::layout.html.twig' %}
+
+{% block title %}
+  Job - Creation of new Job
+{% endblock %}
+  
+{% block content %}
 <h1>Job creation</h1>
 
 <form action="{{ path('job_create') }}" method="post" {{ form_enctype(form) }}>
@@ -14,3 +21,4 @@
         </a>
     </li>
 </ul>
+{% endblock %}

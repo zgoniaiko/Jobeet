@@ -102,7 +102,12 @@ class Job
     $this->createdAt = new \DateTime();
     $this->updatedAt = new \DateTime();
   }
-
+  
+  public function __toString()
+  {
+    return sprintf('%s at %s (%s)', $this->getPosition(), $this->getCompany(), $this->getLocation());
+  }
+  
     /**
      * Get id
      *

@@ -41,16 +41,16 @@ class JobController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        $entity = $em->getRepository('ZiaJobBundle:Job')->find($id);
+        $job = $em->getRepository('ZiaJobBundle:Job')->find($id);
 
-        if (!$entity) {
+        if (!$job) {
             throw $this->createNotFoundException('Unable to find Job entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
+            'job'      => $job,
             'delete_form' => $deleteForm->createView(),
         );
     }

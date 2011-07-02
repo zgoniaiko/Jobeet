@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Zia\JobBundle\Entity\Job;
 use Zia\JobBundle\Form\JobType;
 
@@ -26,33 +27,20 @@ class JobController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        $entities = $em->getRepository('ZiaJobBundle:Job')->findAll();
+        $jobs = $em->getRepository('ZiaJobBundle:Job')->findAll();
 
-        return array('entities' => $entities);
+        return array('jobs' => $jobs);
     }
 
     /**
      * Finds and displays a Job entity.
      *
      * @Route("/{company}/{location}/{id}/{position}", name="job_show", defaults={"company"="noname", "location"="undefined", "position"="undefined"} )
-     * @Template()
+     * @ParamConverter("job", class="ZiaJobBundle:Job")
+     * @Template
      */
-    public function showAction($id)
+    public function showAction(Job $job)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $job = $em->getRepository('ZiaJobBundle:Job')->find($id);
-
-        if (!$job) {
-            throw $this->createNotFoundException('Unable to find Job entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'job'      => $job,
-            'delete_form' => $deleteForm->createView(),
-        );
     }
 
     /**
@@ -63,11 +51,11 @@ class JobController extends Controller
      */
     public function newAction()
     {
-        $entity = new Job();
-        $form   = $this->createForm(new JobType(), $entity);
+        $job = new Job();
+        $form   = $this->createForm(new JobType(), $job);
 
         return array(
-            'entity' => $entity,
+            'job' => $job,
             'form'   => $form->createView()
         );
     }
@@ -81,25 +69,25 @@ class JobController extends Controller
      */
     public function createAction()
     {
-        $entity  = new Job();
+        $job  = new Job();
         $request = $this->getRequest();
-        $form    = $this->createForm(new JobType(), $entity);
+        $form    = $this->createForm(new JobType(), $job);
 
         if ('POST' === $request->getMethod()) {
             $form->bindRequest($request);
 
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($entity);
+                $em->persist($job);
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('job_show', array('id' => $entity->getId())));
+                return $this->redirect($this->generateUrl('job_show', array('id' => $job->getId())));
                 
             }
         }
 
         return array(
-            'entity' => $entity,
+            'job' => $job,
             'form'   => $form->createView()
         );
     }
@@ -108,23 +96,16 @@ class JobController extends Controller
      * Displays a form to edit an existing Job entity.
      *
      * @Route("/{id}/edit", name="job_edit")
+     * @ParamConverter("job", class="ZiaJobBundle:Job")
      * @Template()
      */
-    public function editAction($id)
+    public function editAction(Job $job)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $entity = $em->getRepository('ZiaJobBundle:Job')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Job entity.');
-        }
-
-        $editForm = $this->createForm(new JobType(), $entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createForm(new JobType(), $job);
+        $deleteForm = $this->createDeleteForm($job->getId());
 
         return array(
-            'entity'      => $entity,
+            'job'      => $job,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
@@ -134,21 +115,14 @@ class JobController extends Controller
      * Edits an existing Job entity.
      *
      * @Route("/{id}/update", name="job_update")
+     * @ParamConverter("job", class="ZiaJobBundle:Job")
      * @Method("post")
      * @Template("ZiaJobBundle:Job:edit.html.twig")
      */
-    public function updateAction($id)
+    public function updateAction(Job $job)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $entity = $em->getRepository('ZiaJobBundle:Job')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Job entity.');
-        }
-
-        $editForm   = $this->createForm(new JobType(), $entity);
-        $deleteForm = $this->createDeleteForm($id);
+        $editForm   = $this->createForm(new JobType(), $job);
+        $deleteForm = $this->createDeleteForm($job->getId());
 
         $request = $this->getRequest();
 
@@ -157,15 +131,15 @@ class JobController extends Controller
 
             if ($editForm->isValid()) {
                 $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($entity);
+                $em->persist($job);
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('job_edit', array('id' => $id)));
+                return $this->redirect($this->generateUrl('job_edit', array('id' => $job->getId())));
             }
         }
 
         return array(
-            'entity'      => $entity,
+            'job'      => $job,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
@@ -181,22 +155,22 @@ class JobController extends Controller
     {
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
-
+ 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
-
-            if ($form->isValid()) {
+             $form->bindRequest($request);
+ 
+             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getEntityManager();
-                $entity = $em->getRepository('ZiaJobBundle:Job')->find($id);
+                $job = $em->getRepository('ZiaJobBundle:Job')->find($id);
 
-                if (!$entity) {
+                if (!$job) {
                     throw $this->createNotFoundException('Unable to find Job entity.');
                 }
 
-                $em->remove($entity);
+                $em->remove($job);
                 $em->flush();
-            }
-        }
+             }
+         }
 
         return $this->redirect($this->generateUrl('job'));
     }

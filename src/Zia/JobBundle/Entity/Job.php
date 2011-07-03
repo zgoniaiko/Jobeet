@@ -108,6 +108,21 @@ class Job
     return sprintf('%s at %s (%s)', $this->getPosition(), $this->getCompany(), $this->getLocation());
   }
   
+  public function getCompanySlug()
+  {
+    return Utils::slugify($this->getCompany());
+  }
+
+  public function getPositionSlug()
+  {
+    return Utils::slugify($this->getPosition());
+  }
+
+  public function getLocationSlug()
+  {
+    return Utils::slugify($this->getLocation());
+  }
+
     /**
      * Get id
      *

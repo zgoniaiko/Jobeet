@@ -27,14 +27,7 @@ class JobController extends Controller
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        $repository = $em->getRepository('ZiaJobBundle:Job');
-        
-        $query = $repository->createQueryBuilder('j')
-          ->where('j.expiresAt > :date')
-          ->setParameter('date', date('Y-m-d H:i:s', time() - 86400 * 30))
-          ->getQuery();
-        
-        $jobs = $query->getResult();
+        $jobs = $em->getRepository('ZiaJobBundle:Job')->getActiveJobs();
 
         return array('jobs' => $jobs);
     }

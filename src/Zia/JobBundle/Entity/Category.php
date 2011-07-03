@@ -3,10 +3,12 @@
 namespace Zia\JobBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="job_category")
+ * @ORM\Entity(repositoryClass="Zia\JobBundle\Entity\CategoryRepository")
  */
 class Category {
   /**
@@ -55,4 +57,17 @@ class Category {
     {
         return $this->name;
     }
+}
+
+class CategoryRepository extends EntityRepository
+{
+  public function getWithJobs()
+  {
+    return $this->createQuery('c')
+      ->leftJoin('c.jobs j')
+      ->where('j.expires_at > :date')
+      ->setParameter('date', date('Y-m-d H:i:s', time()))
+      ->getQuery()
+      ->getResult();
+  }
 }

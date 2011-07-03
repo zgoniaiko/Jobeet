@@ -3,10 +3,12 @@
 namespace Zia\JobBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="job_job")
+ * @ORM\Entity(repositoryClass="Zia\JobBundle\Entity\JobRepository")
  */
 class Job
 {
@@ -468,4 +470,17 @@ class Job
     {
         return $this->category;
     }
+}
+
+class JobRepository extends EntityRepository
+{
+  public function getActiveJobs()
+  {
+    return $this->createQueryBuilder('j')
+      ->where('j.expiresAt > :date')
+      ->orderBy('j.expiresAt', 'DESC')
+      ->setParameter('date', date('Y-m-d H:i:s', time() - 86400 * 30))
+      ->getQuery()
+      ->getResult();
+  }
 }

@@ -25,11 +25,11 @@ class JobController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+      $em = $this->getDoctrine()->getEntityManager();
 
-        $jobs = $em->getRepository('ZiaJobBundle:Job')->getActiveJobs();
-
-        return array('jobs' => $jobs);
+      $categories = $em->getRepository('ZiaJobBundle:Category')->getWithJobs();
+      
+      return array('categories' => $categories);
     }
 
     /**

@@ -20,7 +20,7 @@ class Job
   protected $id;
   
   /**
-    * @ORM\ManyToOne(targetEntity="Category" )
+    * @ORM\ManyToOne(targetEntity="Category", inversedBy="jobs" )
     * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
     */  
   protected $category;
@@ -470,17 +470,4 @@ class Job
     {
         return $this->category;
     }
-}
-
-class JobRepository extends EntityRepository
-{
-  public function getActiveJobs()
-  {
-    return $this->createQueryBuilder('j')
-      ->where('j.expiresAt > :date')
-      ->orderBy('j.expiresAt', 'DESC')
-      ->setParameter('date', date('Y-m-d H:i:s', time() - 86400 * 30))
-      ->getQuery()
-      ->getResult();
-  }
 }

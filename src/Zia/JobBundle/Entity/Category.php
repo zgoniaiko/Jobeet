@@ -22,12 +22,28 @@ class Category {
     * @ORM\Column(type="string", length="255", unique=true)
     */  
   protected $name;
+  
+  /**
+   * @ORM\OneToMany(targetEntity="Job", mappedBy="category")
+   */
+  protected $jobs;
 
   public function __toString()
   {
     return $this->getName();
   }
   
+  public function getSlug()
+  {
+    return Utils::slugify($this->getName());
+  }
+  
+  public function getActiveJobs()
+  {
+    //TODO: check how to get active jobs for this category
+    return $this->getJobs();
+  }
+
     /**
      * Get id
      *
@@ -57,17 +73,28 @@ class Category {
     {
         return $this->name;
     }
-}
+    public function __construct()
+    {
+        $this->jobs = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add jobs
+     *
+     * @param Zia\JobBundle\Entity\Job $jobs
+     */
+    public function addJobs(\Zia\JobBundle\Entity\Job $jobs)
+    {
+        $this->jobs[] = $jobs;
+    }
 
-class CategoryRepository extends EntityRepository
-{
-  public function getWithJobs()
-  {
-    return $this->createQuery('c')
-      ->leftJoin('c.jobs j')
-      ->where('j.expires_at > :date')
-      ->setParameter('date', date('Y-m-d H:i:s', time()))
-      ->getQuery()
-      ->getResult();
-  }
+    /**
+     * Get jobs
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getJobs()
+    {
+        return $this->jobs;
+    }
 }

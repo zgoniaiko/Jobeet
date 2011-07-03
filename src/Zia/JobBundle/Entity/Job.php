@@ -97,7 +97,7 @@ class Job
     * @ORM\Column(type="datetime", name="expires_at")
     */  
   protected $expiresAt;
-  
+
   public function __construct() {
     $this->createdAt = new \DateTime();
     $this->updatedAt = new \DateTime();
@@ -122,7 +122,23 @@ class Job
   {
     return Utils::slugify($this->getLocation());
   }
+  
+  /**
+    * @ORM\PrePersist
+    */  
+  public function setupCreatedAt()
+  {
+    $this->createdAt = new \DateTime();
+  }
 
+  /**
+    * @ORM\PrePersist
+    */  
+  public function setupUpdatedAt()
+  {
+    $this->updatedAt = new \DateTime();
+  }
+  
     /**
      * Get id
      *

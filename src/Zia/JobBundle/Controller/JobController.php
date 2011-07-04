@@ -27,7 +27,7 @@ class JobController extends Controller
     {
       $em = $this->getDoctrine()->getEntityManager();
 
-      $categories = $em->getRepository('ZiaJobBundle:Category')->getWithJobs();
+      $categories = $em->getRepository('ZiaJobBundle:Category')->findWithActiveJobs();
       
       return array('categories' => $categories);
     }

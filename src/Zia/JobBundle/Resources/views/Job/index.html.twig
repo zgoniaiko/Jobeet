@@ -22,7 +22,7 @@
       </div>
  
       <table class="jobs">
-        {% for index, job in category.getActiveJobs %}
+        {% for index, job in category.jobs %}
           <tr class="{{ cycle(['odd', 'even'], index) }}">
             <td class="location">{{ job.location }}</td>
             <td class="position">

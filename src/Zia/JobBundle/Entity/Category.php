@@ -38,12 +38,6 @@ class Category {
     return Utils::slugify($this->getName());
   }
   
-  public function getActiveJobs()
-  {
-    //TODO: check how to get active jobs for this category
-    return $this->getJobs();
-  }
-
     /**
      * Get id
      *

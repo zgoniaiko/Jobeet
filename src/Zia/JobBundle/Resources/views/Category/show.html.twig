@@ -12,7 +12,6 @@
   
 {% block content %}
 <div id="jobs">
-  {% for category in categories %}
     <div class="category_{{ category.slug }}">
       <div class="category">
         <div class="feed">
@@ -34,15 +33,6 @@
           </tr>
         {% endfor %}
       </table>
-      
-      {% set count = category.countActiveJobs() - 10 %}  
-      {% if (count > 0) %}
-        <div class="more_jobs">
-          and <a href="{{ url('category_show', { 'id' : category.id} ) }}">{{ count }}</a>
-          more...
-        </div>
-      {% endif %}
     </div>
-  {% endfor %}
 </div>
 {% endblock %}

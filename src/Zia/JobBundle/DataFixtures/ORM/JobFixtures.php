@@ -79,9 +79,33 @@ class JobFixtures implements FixtureInterface
         $expired->setCreatedAt(new \DateTime('2005-12-01'));
         $expired->setExpiresAt(new \DateTime('2006-01-01'));
         
+        $jobs = array();
+        for ($i = 100; $i <= 130; $i++){
+          $job = new Job();
+          $job->setCategory($programming);
+          $job->setType('full-time');
+          $job->setCompany('Company ' . $i);
+          $job->setLogo('sensio-labs.gif');
+          $job->setUrl('http://www.sensiolabs.com/');
+          $job->setPosition('Web Developer');
+          $job->setLocation('Paris, France');
+          $job->setDescription("Lorem ipsum dolor sit amet, consectetur adipisicing elit.");
+          $job->setHowToApply('Send your resume to lorem.ipsum [at] company_'.$i.'.sit');
+          $job->setIsPublic(true);
+          $job->setIsActivated(true);
+          $job->setToken('job_'.$i);
+          $job->setEmail('job@example.com');
+          $job->setExpiresAt(new \DateTime(date('Y-m-d', strtotime('+30 days'))));
+          
+          $jobs[] = $job;
+        }
+        
         $em->persist($sensio);
         $em->persist($extreme);
         $em->persist($expired);
+        foreach ($jobs as $job) {
+          $em->persist($job);
+        }
 
         $em->flush();
     }

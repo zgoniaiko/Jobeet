@@ -12,14 +12,30 @@ use Doctrine\ORM\EntityRepository;
  */
 class CategoryRepository extends EntityRepository
 {
-  public function findWithActiveJobs()
+  public function findWithActiveJobs($maxResults = 10, $category = null)
   {
-    return $this->createQueryBuilder('c')
+    $builder = $this->createQueryBuilder('c')
       ->select('c, j')
       ->leftJoin('c.jobs', 'j' )
       ->where('j.expiresAt > :date')
-      ->setParameter('date', date('Y-m-d H:i:s', time()))
-      ->getQuery()
-      ->getResult();    
+      ->setParameter('date', date('Y-m-d H:i:s', time()));
+    
+    if (!is_null($category)) {
+      if (is_numeric($category)) {
+        $builder->andWhere('c.id = :category_id')
+          ->setParameter('category_id', $category);
+      } elseif ($category instanceof Category) {
+        $builder->andWhere('c.id = :category_id')
+          ->setParameter('category_id', $category->getId());
+      } else {
+        throw new \Symfony\Component\Validator\Exception\UnexpectedTypeException('Unexpected type of category');
+      }
+    }
+    
+    if ($maxResults) {
+      $builder->setMaxResults($maxResults);
+    }
+    
+    return $builder->getQuery()->getResult();    
   }
 }

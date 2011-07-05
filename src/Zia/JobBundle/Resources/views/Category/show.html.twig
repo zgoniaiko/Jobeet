@@ -12,6 +12,7 @@
   
 {% block content %}
 <div id="jobs">
+  {% for category in categories %}
     <div class="category_{{ category.slug }}">
       <div class="category">
         <div class="feed">
@@ -34,5 +35,6 @@
         {% endfor %}
       </table>
     </div>
+  {% endfor %}
 </div>
 {% endblock %}

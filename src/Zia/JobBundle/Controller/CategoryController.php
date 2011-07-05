@@ -20,10 +20,14 @@ class CategoryController  extends Controller
      * Finds and displays a Job entity.
      *
      * @Route("/{id}", name="category_show" )
-     * @ParamConverter("category", class="ZiaJobBundle:Category")
      * @Template
      */
-    public function showAction(Category $category)
+    public function showAction($id)
     {
+      $em = $this->getDoctrine()->getEntityManager();
+
+      $category = $em->getRepository('ZiaJobBundle:Category')->findWithActiveJobs(10, $id);
+      
+      return array('categories' => $category);
     }
 }

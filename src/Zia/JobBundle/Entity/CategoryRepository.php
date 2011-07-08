@@ -12,14 +12,27 @@ use Doctrine\ORM\EntityRepository;
  */
 class CategoryRepository extends EntityRepository
 {
-  public function findWithActiveJobs($maxResults = 10, $category = null)
+  public function getWithActiveJobsBuilder($category = null)
   {
     $builder = $this->createQueryBuilder('c')
-      ->select('c, j')
+      ->select('c');
+    
+    $this->addActiveJobsCriteria($builder);
+    $this->addCategoryCriteria($builder, $category);
+    
+    return $builder;
+  }
+
+  public function addActiveJobsCriteria($builder)
+  {
+      $builder->addSelect('j')
       ->leftJoin('c.jobs', 'j' )
       ->where('j.expiresAt > :date')
       ->setParameter('date', date('Y-m-d H:i:s', time()));
-    
+  }
+  
+  public function addCategoryCriteria($builder, $category = null)
+  {
     if (!is_null($category)) {
       if (is_numeric($category)) {
         $builder->andWhere('c.id = :category_id')
@@ -31,10 +44,35 @@ class CategoryRepository extends EntityRepository
         throw new \Symfony\Component\Validator\Exception\UnexpectedTypeException('Unexpected type of category');
       }
     }
-    
-    if ($maxResults) {
+  }
+  
+  public function addLimit($builder, $maxResults = null)
+  {
+    if ($maxResults > 0) {
       $builder->setMaxResults($maxResults);
     }
+  }
+
+  public function countActiveJobs($category = null)
+  {
+    $builder = $this->getWithActiveJobsBuilder($category);
+    
+    $categories = $builder->getQuery()->getResult();
+    
+    //FIXME: replace this hack with correct count query or paginator
+    $num_results = array();
+    foreach ($categories as $category) {
+      $num_results[$category->getId()] = count($category->getJobs());
+    }
+    
+    return $num_results;
+  }
+  
+  public function findWithActiveJobs($maxResults = null, $category = null)
+  {
+    $builder = $this->getWithActiveJobsBuilder($category);
+    
+    $this->addLimit($builder, $maxResults);
     
     return $builder->getQuery()->getResult();    
   }

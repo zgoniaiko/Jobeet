@@ -38,11 +38,6 @@ class Category {
     return Utils::slugify($this->getName());
   }
   
-  public function countActiveJobs()
-  {
-    return count($this->jobs);
-  }
-  
     /**
      * Get id
      *

@@ -26,10 +26,14 @@ class JobController extends Controller
     public function indexAction()
     {
       $em = $this->getDoctrine()->getEntityManager();
-
-      $categories = $em->getRepository('ZiaJobBundle:Category')->findWithActiveJobs();
       
-      return array('categories' => $categories);
+      //FIXME: should be limit for each category, not for all categories
+      $categories = $em->getRepository('ZiaJobBundle:Category')->findWithActiveJobs(12);
+      //FIXME: hidden side-effect detected. probably cache. 1-st query with limit of rows
+      $maxResults = $em->getRepository('ZiaJobBundle:Category')->countActiveJobs();
+      
+      return array('categories' => $categories,
+                   'maxResults' => $maxResults);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Zia\JobBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * CategoryRepository
@@ -15,7 +16,8 @@ class CategoryRepository extends EntityRepository
   public function getWithActiveJobsBuilder($category = null)
   {
     $builder = $this->createQueryBuilder('c')
-      ->select('c');
+      ->select('c, j')
+      ->leftJoin('c.jobs', 'j' );
     
     $this->addActiveJobsCriteria($builder);
     $this->addCategoryCriteria($builder, $category);
@@ -23,15 +25,13 @@ class CategoryRepository extends EntityRepository
     return $builder;
   }
 
-  public function addActiveJobsCriteria($builder)
+  public function addActiveJobsCriteria(QueryBuilder $builder)
   {
-      $builder->addSelect('j')
-      ->leftJoin('c.jobs', 'j' )
-      ->where('j.expiresAt > :date')
+      $builder->andWhere('j.expiresAt > :date')
       ->setParameter('date', date('Y-m-d H:i:s', time()));
   }
   
-  public function addCategoryCriteria($builder, $category = null)
+  public function addCategoryCriteria(QueryBuilder $builder, $category = null)
   {
     if (!is_null($category)) {
       if (is_numeric($category)) {
@@ -46,7 +46,7 @@ class CategoryRepository extends EntityRepository
     }
   }
   
-  public function addLimit($builder, $maxResults = null)
+  public function addLimit(QueryBuilder $builder, $maxResults = null)
   {
     if ($maxResults > 0) {
       $builder->setMaxResults($maxResults);
@@ -55,31 +55,12 @@ class CategoryRepository extends EntityRepository
 
   public function countActiveJobs($category = null)
   {
-    $dql  = 'SELECT c.id, COUNT(j.id) AS total'; 
-    $dql .= ' FROM ' . $this->_entityName . ' c'; 
-    $dql .= ' LEFT JOIN c.jobs j';
-    $dql .= ' WHERE j.expiresAt > :date';
+    $builder = $this->getWithActiveJobsBuilder($category);
     
-    if (!is_null($category)) {
-      $dql .= ' AND c.id = :category_id';
-    }
+    $builder->select('c.id, COUNT(j.id) total');
+    $builder->addGroupBy('c.id');
     
-    $dql .= ' GROUP BY c.id';
-    
-    $query = $this->_em->createQuery($dql);
-    $query->setParameter('date', date('Y-m-d H:i:s', time()));
-    
-    if (!is_null($category)) {
-      if (is_numeric($category)) {
-          $query->setParameter('category_id', $category);
-      } elseif ($category instanceof Category) {
-          $query->setParameter('category_id', $category->getId());
-      } else {
-        throw new \Symfony\Component\Validator\Exception\UnexpectedTypeException('Unexpected type of category');
-      }
-    }
-            
-    $categories = $query->execute();
+    $categories = $builder->getQuery()->execute();
     $num_results = array();
     foreach ($categories as $category) {
       $num_results[$category['id']] = $category['total'];

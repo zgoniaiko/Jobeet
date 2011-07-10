@@ -26,8 +26,12 @@ class CategoryController  extends Controller
     {
       $em = $this->getDoctrine()->getEntityManager();
 
-      $category = $em->getRepository('ZiaJobBundle:Category')->findBySlugWithActiveJobs(10, $slug);
+      $categories = $em->getRepository('ZiaJobBundle:Category')->findBySlugWithActiveJobs(10, $slug);
       
-      return array('categories' => $category);
+      if (!$categories) {
+        throw $this->createNotFoundException('Unable to find Category.');
+      }
+
+      return array('category' => $categories[0]);
     }
 }

@@ -12,8 +12,6 @@
   
 {% block content %}
 <div id="jobs">
-  {% for category in categories %}
     {% include 'ZiaJobBundle:Category:item.html.twig' with {'category' : category} %}
-  {% endfor %}
 </div>
 {% endblock %}

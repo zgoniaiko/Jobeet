@@ -13,36 +13,7 @@
 {% block content %}
 <div id="jobs">
   {% for category in categories %}
-    <div class="category_{{ category.slug }}">
-      <div class="category">
-        <div class="feed">
-          <a href="">Feed</a>
-        </div>
-        <h1><a href="{{ url('category_show', { 'id' : category.id} ) }}">{{ category }}</a></h1>
-      </div>
- 
-      <table class="jobs">
-        {% for index, job in category.jobs %}
-          <tr class="{{ cycle(['odd', 'even'], index) }}">
-            <td class="location">{{ job.location }}</td>
-            <td class="position">
-              <a href="{{ url('job_show', { 'company' : job.companySlug, 'location': job.locationSlug, 'id' : job.id,  'position': job.positionSlug }) }}">
-                {{ job.position }}
-              </a>
-            </td>
-            <td class="company">{{ job.company }}</td>
-          </tr>
-        {% endfor %}
-      </table>
-      
-      {% set notShown = maxResults[category.id] - 10 %}  
-      {% if (notShown > 0) %}
-        <div class="more_jobs">
-          and <a href="{{ url('category_show', { 'id' : category.id} ) }}">{{ notShown }}</a>
-          more...
-        </div>
-      {% endif %}
-    </div>
+    {% include 'ZiaJobBundle:Category:item.html.twig' with {'category' : category} %}
   {% endfor %}
 </div>
 {% endblock %}

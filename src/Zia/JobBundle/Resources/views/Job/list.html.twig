@@ -1,0 +1,13 @@
+<table class="jobs">
+  {% for index, job in jobs %}
+    <tr class="{{ cycle(['odd', 'even'], index) }}">
+      <td class="location">{{ job.location }}</td>
+      <td class="position">
+        <a href="{{ url('job_show', { 'company' : job.companySlug, 'location': job.locationSlug, 'id' : job.id,  'position': job.positionSlug }) }}">
+          {{ job.position }}
+        </a>
+      </td>
+      <td class="company">{{ job.company }}</td>
+    </tr>
+  {% endfor %}
+</table>

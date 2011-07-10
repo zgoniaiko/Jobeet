@@ -37,12 +37,15 @@ class CategoryRepository extends EntityRepository
       if (is_numeric($category)) {
         $builder->andWhere('c.id = :category_id')
           ->setParameter('category_id', $category);
+      } elseif (is_string($category)) {
+        $builder->andWhere('c.slug = :category_slug')
+          ->setParameter('category_slug', $category);
       } elseif ($category instanceof Category) {
         $builder->andWhere('c.id = :category_id')
           ->setParameter('category_id', $category->getId());
       } else {
         throw new \Symfony\Component\Validator\Exception\UnexpectedTypeException('Unexpected type of category');
-      }
+      } 
     }
   }
   
@@ -70,6 +73,15 @@ class CategoryRepository extends EntityRepository
   }
   
   public function findWithActiveJobs($maxResults = null, $category = null)
+  {
+    $builder = $this->getWithActiveJobsBuilder($category);
+    
+    $this->addLimit($builder, $maxResults);
+    
+    return $builder->getQuery()->getResult();    
+  }
+  
+  public function findBySlugWithActiveJobs($maxResults = null, $category = null)
   {
     $builder = $this->getWithActiveJobsBuilder($category);
     

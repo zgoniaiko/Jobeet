@@ -4,13 +4,16 @@ namespace Zia\JobBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\EntityRepository;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Sluggable\Sluggable;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="job_category")
  * @ORM\Entity(repositoryClass="Zia\JobBundle\Entity\CategoryRepository")
  */
-class Category {
+class Category
+{
   /**
     * @ORM\Id
     * @ORM\Column(type="integer")
@@ -19,15 +22,22 @@ class Category {
   protected $id;
   
   /**
-    * @ORM\Column(type="string", length="255", unique=true)
+    * @Gedmo\Sluggable
+    * @ORM\Column(type="string", length="128")
     */  
   protected $name;
   
   /**
-   * @ORM\OneToMany(targetEntity="Job", mappedBy="category")
-   */
+    * @ORM\OneToMany(targetEntity="Job", mappedBy="category")
+    */
   protected $jobs;
 
+  /**
+    * @Gedmo\Slug
+    * @ORM\Column(name="slug", type="string", length=128, unique=true)
+    */
+  protected $slug;
+  
   public function __toString()
   {
     return $this->getName();
@@ -35,7 +45,7 @@ class Category {
   
   public function getSlug()
   {
-    return Utils::slugify($this->getName());
+    return $this->slug;
   }
   
     /**

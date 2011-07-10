@@ -3,7 +3,7 @@
     <div class="feed">
       <a href="">Feed</a>
     </div>
-    <h1><a href="{{ url('category_show', { 'id' : category.id} ) }}">{{ category }}</a></h1>
+    <h1><a href="{{ url('category_show', { 'slug' : category.slug } ) }}">{{ category }}</a></h1>
   </div>
 
   {% include 'ZiaJobBundle:Job:list.html.twig' with {'jobs' : category.jobs} only %}
@@ -13,7 +13,7 @@
       {% set notShown = maxResults[category.id] - 10 %}  
       {% if (notShown > 0) %}
         <div class="more_jobs">
-          and <a href="{{ url('category_show', { 'id' : category.id} ) }}">{{ notShown }}</a>
+          and <a href="{{ url('category_show', { 'slug' : category.slug } ) }}">{{ notShown }}</a>
           more...
         </div>
       {% endif %}

@@ -79,7 +79,11 @@ class JobFixtures implements FixtureInterface
         $expired->setCreatedAt(new \DateTime('2005-12-01'));
         $expired->setExpiresAt(new \DateTime('2006-01-01'));
         
-        $jobs = array();
+        
+        $em->persist($sensio);
+        $em->persist($extreme);
+        $em->persist($expired);
+
         for ($i = 100; $i <= 130; $i++){
           $job = new Job();
           $job->setCategory($programming);
@@ -97,13 +101,6 @@ class JobFixtures implements FixtureInterface
           $job->setEmail('job@example.com');
           $job->setExpiresAt(new \DateTime(date('Y-m-d', strtotime('+30 days'))));
           
-          $jobs[] = $job;
-        }
-        
-        $em->persist($sensio);
-        $em->persist($extreme);
-        $em->persist($expired);
-        foreach ($jobs as $job) {
           $em->persist($job);
         }
 

@@ -55,14 +55,34 @@ class CategoryRepository extends EntityRepository
 
   public function countActiveJobs($category = null)
   {
-    $builder = $this->getWithActiveJobsBuilder($category);
+    $dql  = 'SELECT c.id, COUNT(j.id) AS total'; 
+    $dql .= ' FROM ' . $this->_entityName . ' c'; 
+    $dql .= ' LEFT JOIN c.jobs j';
+    $dql .= ' WHERE j.expiresAt > :date';
     
-    $categories = $builder->getQuery()->getResult();
+    if (!is_null($category)) {
+      $dql .= ' AND c.id = :category_id';
+    }
     
-    //FIXME: replace this hack with correct count query or paginator
+    $dql .= ' GROUP BY c.id';
+    
+    $query = $this->_em->createQuery($dql);
+    $query->setParameter('date', date('Y-m-d H:i:s', time()));
+    
+    if (!is_null($category)) {
+      if (is_numeric($category)) {
+          $query->setParameter('category_id', $category);
+      } elseif ($category instanceof Category) {
+          $query->setParameter('category_id', $category->getId());
+      } else {
+        throw new \Symfony\Component\Validator\Exception\UnexpectedTypeException('Unexpected type of category');
+      }
+    }
+            
+    $categories = $query->execute();
     $num_results = array();
     foreach ($categories as $category) {
-      $num_results[$category->getId()] = count($category->getJobs());
+      $num_results[$category['id']] = $category['total'];
     }
     
     return $num_results;

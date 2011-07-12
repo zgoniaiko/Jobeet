@@ -15,7 +15,7 @@ use Zia\JobBundle\Form\JobType;
  *
  * @Route("/job")
  */
-class JobController extends Controller
+class JobController extends ZiaController
 {
     /**
      * Lists all Job entities.
@@ -83,7 +83,13 @@ class JobController extends Controller
                 $em->persist($job);
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('job_show', array('id' => $job->getId())));
+                $this->setFlash('notice', 'Your Job was been added!');
+
+                return $this->redirect($this->generateUrl('job_show', array('company' => $job->getCompanySlug(),
+                                                                            'location' => $job->getLocationSlug(),
+                                                                            'id' => $job->getId(),
+                                                                            'position' => $job->getPositionSlug(),
+                                                                         )));
                 
             }
         }

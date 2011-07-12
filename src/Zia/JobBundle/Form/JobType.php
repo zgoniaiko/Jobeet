@@ -26,4 +26,9 @@ class JobType extends AbstractType
             ->add('category')
         ;
     }
+
+    public function getName()
+    {
+        return 'zia_jobbundle_jobtype';
+    }
 }

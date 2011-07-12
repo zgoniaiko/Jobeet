@@ -6,6 +6,15 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class JobControllerTest extends WebTestCase
 {
+    public function testIndex()
+    {
+        $client = $this->createClient();
+
+        $crawler = $client->request('GET', '/job/');
+
+        $this->assertTrue($crawler->filter('html:contains("List of Jobs")')->count() > 0);
+    }
+
     /*
     public function testCompleteScenario()
     {

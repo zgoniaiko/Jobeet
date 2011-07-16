@@ -1554,6 +1554,10 @@ class ServerBag extends ParameterBag
             }
         }
 
+                if (isset($this->parameters['PHP_AUTH_USER'])) {
+            $headers['Authorization'] = 'Basic '.base64_encode($this->parameters['PHP_AUTH_USER'].':'.$this->parameters['PHP_AUTH_PW']);
+        }
+
         return $headers;
     }
 }
@@ -1569,14 +1573,12 @@ namespace Symfony\Component\HttpFoundation
 class HeaderBag
 {
     protected $headers;
-    protected $cookies;
     protected $cacheControl;
 
     
     public function __construct(array $headers = array())
     {
         $this->cacheControl = array();
-        $this->cookies = array();
         $this->headers = array();
         foreach ($headers as $key => $values) {
             $this->set($key, $values);
@@ -1693,40 +1695,6 @@ class HeaderBag
         if ('cache-control' === $key) {
             $this->cacheControl = array();
         }
-    }
-
-    
-    public function setCookie(Cookie $cookie)
-    {
-        $this->cookies[$cookie->getName()] = $cookie;
-    }
-
-    
-    public function removeCookie($name)
-    {
-        unset($this->cookies[$name]);
-    }
-
-    
-    public function hasCookie($name)
-    {
-        return isset($this->cookies[$name]);
-    }
-
-    
-    public function getCookie($name)
-    {
-        if (!$this->hasCookie($name)) {
-            throw new \InvalidArgumentException(sprintf('There is no cookie with name "%s".', $name));
-        }
-
-        return $this->cookies[$name];
-    }
-
-    
-    public function getCookies()
-    {
-        return $this->cookies;
     }
 
     

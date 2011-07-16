@@ -3,6 +3,7 @@
 namespace Zia\JobBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * JobRepository
@@ -14,11 +15,23 @@ class JobRepository extends EntityRepository
 {
   public function getActiveJobs()
   {
-    return $this->createQueryBuilder('j')
-      ->where('j.expiresAt > :date')
-      ->orderBy('j.expiresAt', 'DESC')
-      ->setParameter('date', date('Y-m-d H:i:s', time() - 86400 * 30))
-      ->getQuery()
-      ->getResult();
+    return $this->addActiveJobsQuery()->getQuery()->getResult();
+  }
+
+  public function addActiveJobsQuery(QueryBuilder $builder = null)
+  {
+    if ($builder === null)
+    {
+      $builder = $this->createQueryBuilder('j')
+        ->select('j');
+    }
+    $date = new \DateTime('now');
+
+    $builder->andWhere('j.expiresAt > :date')
+      ->andWhere('j.isActivated = 1')
+      ->addOrderBy('j.expiresAt', 'DESC')
+      ->setParameter('date', $date->format('Y-m-d H:i:s'));
+
+    return $builder;
   }
 }

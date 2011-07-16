@@ -134,7 +134,7 @@ class Job
   }
 
   /**
-    * @ORM\PrePersist
+    * @ORM\PreUpdate
     */  
   public function setupUpdatedAt()
   {

@@ -19,18 +19,12 @@ class CategoryRepository extends EntityRepository
       ->select('c, j')
       ->leftJoin('c.jobs', 'j' );
     
-    $this->addActiveJobsCriteria($builder);
+    $this->_em->getRepository('ZiaJobBundle:Job')->addActiveJobsQuery($builder);
     $this->addCategoryCriteria($builder, $category);
     
     return $builder;
   }
 
-  public function addActiveJobsCriteria(QueryBuilder $builder)
-  {
-      $builder->andWhere('j.expiresAt > :date')
-      ->setParameter('date', date('Y-m-d H:i:s', time()));
-  }
-  
   public function addCategoryCriteria(QueryBuilder $builder, $category = null)
   {
     if (!is_null($category)) {

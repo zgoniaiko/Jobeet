@@ -12,9 +12,9 @@ class ContactType extends AbstractType
         $builder->add('email', 'email');
         $builder->add('message', 'textarea');
     }
-
+    
     public function getName()
     {
-        return 'acme_demobundle_contacttype';
+        return 'contact';
     }
 }

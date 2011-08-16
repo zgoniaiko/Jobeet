@@ -46,6 +46,13 @@ doctrine:
     orm:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
+        mappings: 
+             StofDoctrineExtensionsBundle: false
+
+stof_doctrine_extensions: 
+     orm: 
+         default: 
+             sluggable: true
 
 # Swiftmailer Configuration
 swiftmailer:

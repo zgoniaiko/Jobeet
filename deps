@@ -49,9 +49,21 @@
     git=http://github.com/sensio/SensioFrameworkExtraBundle.git
     target=/bundles/Sensio/Bundle/FrameworkExtraBundle
 
+[JMSAopBundle]
+    git=http://github.com/schmittjoh/JMSAopBundle.git
+    target=/bundles/JMS/AopBundle
+
+[JMSDiExtraBundle]
+    git=http://github.com/schmittjoh/JMSDiExtraBundle.git
+    target=/bundles/JMS/DiExtraBundle
+
 [JMSSecurityExtraBundle]
     git=http://github.com/schmittjoh/JMSSecurityExtraBundle.git
     target=/bundles/JMS/SecurityExtraBundle
+
+[CGLibrary]
+    git=http://github.com/schmittjoh/cg-library.git
+    target=/cg-library
 
 [SensioDistributionBundle]
     git=http://github.com/sensio/SensioDistributionBundle.git

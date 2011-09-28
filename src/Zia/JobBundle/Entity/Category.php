@@ -22,8 +22,7 @@ class Category
   protected $id;
   
   /**
-    * @Gedmo\Sluggable
-    * @ORM\Column(type="string", length="128")
+    * @ORM\Column(type="string", length=128)
     */  
   protected $name;
   
@@ -33,7 +32,7 @@ class Category
   protected $jobs;
 
   /**
-    * @Gedmo\Slug
+    * @Gedmo\Slug(separator="-", updatable=true, fields={"name"})
     * @ORM\Column(name="slug", type="string", length=128, unique=true)
     */
   protected $slug;

@@ -26,47 +26,47 @@ class Job
   protected $category;
   
   /**
-    * @ORM\Column(type="string", length="255")
+    * @ORM\Column(type="string", length=255)
     */  
   protected $type;
   
   /**
-    * @ORM\Column(type="string", length="255", nullable=true)
+    * @ORM\Column(type="string", length=255, nullable=true)
     */  
   protected $company;
   
   /**
-    * @ORM\Column(type="string", length="255")
+    * @ORM\Column(type="string", length=255)
     */  
   protected $logo;
   
   /**
-    * @ORM\Column(type="string", length="255", nullable=true)
+    * @ORM\Column(type="string", length=255, nullable=true)
     */  
   protected $url;
   
   /**
-    * @ORM\Column(type="string", length="255", nullable=true)
+    * @ORM\Column(type="string", length=255, nullable=true)
     */  
   protected $position;
   
   /**
-    * @ORM\Column(type="string", length="255")
+    * @ORM\Column(type="string", length=255)
     */  
   protected $location;
   
   /**
-    * @ORM\Column(type="string", length="4000")
+    * @ORM\Column(type="string", length=4000)
     */  
   protected $description;
   
   /**
-    * @ORM\Column(type="string", length="4000", name="how_to_apply")
+    * @ORM\Column(type="string", length=4000, name="how_to_apply")
     */  
   protected $howToApply;
   
   /**
-    * @ORM\Column(type="string", length="255", unique=true)
+    * @ORM\Column(type="string", length=255, unique=true)
     */  
   protected $token;
   
@@ -81,7 +81,7 @@ class Job
   protected $isActivated;
   
   /**
-    * @ORM\Column(type="string", length="255")
+    * @ORM\Column(type="string", length=255)
     */  
   protected $email;
   
